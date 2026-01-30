@@ -39,7 +39,7 @@
         <p>Tracks in Pack: {game.tracks.length}</p>
         <p>Played History (Store): {$playedTrackIds.length}</p>
     </div>
-
+    
     {#if game.currentTrack}
         <div class="space-y-4 border-l-4 border-green-500 pl-6">
             <div class="h-20">
@@ -59,19 +59,23 @@
                     {game.isPlaying ? '🔊 Playing...' : '▶️ Play 5s'}
                 </button>
 
+                {#if !game.isRevealed}
+                    <button 
+                        onclick={() => game.reveal()}
+                        class="px-6 py-2 bg-zinc-800 rounded hover:bg-zinc-700"
+                    >
+                        🔍 Reveal
+                    </button>
+                {:else}
                 <button 
-                    onclick={() => game.reveal()}
-                    class="px-6 py-2 bg-zinc-800 rounded hover:bg-zinc-700"
-                >
-                    🔍 Reveal
-                </button>
-
-                <button 
-                    onclick={() => game.next()}
+                    onclick={() => {
+                        game.next();
+                        }}
                     class="px-6 py-2 bg-blue-600 rounded hover:bg-blue-500"
                 >
                     Next ⏭️
                 </button>
+                {/if}
             </div>
         </div>
     {:else}
