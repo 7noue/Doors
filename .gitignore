@@ -2,3 +2,8 @@
 **/.cache*
 .venv/
 __pycache__/
+node_modules/
+.svelte-kit/
+build/
+.env.*
+! .env.example
