@@ -41,17 +41,17 @@ def generate_round_3_pairs(songs):
 def matchups(pairs):
     print('CURRENT ROUND')
     for pair in pairs:
-        
         print(f'Song [1]: {pair[0].title}')
         print(f'Song [2]: {pair[1].title}')
         choice = get_user_choice(2)
 
         if choice == 1:
             winner, loser = pair[0], pair[1]
-            print(winner.title)
-            print(winner.elo_score)
+            update_elo(winner, loser)
         else:
             winner, loser = pair[1], pair[0]
+            update_elo(winner, loser)
+            print(winner.rating)
     
 
 # FOR MULTIPLE CHOICE
@@ -72,7 +72,7 @@ def get_user_choice(num_options):
     
 
 def update_elo(winner, loser):
-    expected_winner = 1 / (1 + 10^((loser.rating - winner.rating) / 400))
+    expected_winner = 1 / (1 + 10 ** ((loser.rating - winner.rating) / 400))
     expected_loser = 1 - expected_winner
 
     winner.rating = winner.rating + K * (1 - expected_winner)

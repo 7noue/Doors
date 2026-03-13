@@ -12,7 +12,7 @@ class Song:
     id: str
     title: str 
     artist: str 
-    elo_score: int= 1000
+    rating: int = 1000
     wins: int = 0
     losses: int = 0
 
