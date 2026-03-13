@@ -23,7 +23,7 @@ class Session:
     songs: List[Song] = field(default_factory=list)
     id: str = field(default_factory=lambda: str(uuid.uuid4()))
     current_round: int = 1
-    status: str = 'active'
+    is_active: bool = True
     created_at: datetime = field(default_factory=datetime.now)
 
 

@@ -1,18 +1,26 @@
-import uuid
-import json
 import data_structure as dt
 from typing import List
 import random
 
 K = 32
 
-def create_session(user_id: str , songs: List[dt.Song] = None) -> dt.Session:
-    song_list = songs if songs else []
-    if song_list:
-        paired = generate_round_1_pairs(song_list)
-        paired = matchups(paired)
 
-    return dt.Session(user_id=user_id, songs=song_list)
+# if song_list:
+#         paired = generate_round_1_pairs(song_list)
+#         paired = matchups(paired)
+
+def create_session(user_id: str , songs: List[dt.Song]) -> dt.Session:
+    if not songs or len(songs) < 2:
+        raise ValueError("⛽ Engine Error: You need at least 2 songs to start a matchup!")
+
+    if not user_id:
+        raise ValueError("👤 Driver Error: No user_id provided.")
+    
+    return dt.Session(
+        user_id=user_id,
+        songs=songs,
+        status=False
+    )
 
 def generate_round_1_pairs(songs):
     # 1. Shuffle
@@ -20,16 +28,17 @@ def generate_round_1_pairs(songs):
     
     # 2. Use zip for all the perfect pairs
     # This automatically ignores the last song if the length is odd
-    matchups = list(zip(shuffled[0::2], shuffled[1::2]))
+    paired = list(zip(shuffled[0::2], shuffled[1::2]))
     
     # 3. Handle the remainder
     if len(shuffled) % 2 != 0:
         last_song = shuffled[-1]
         # Pick anyone from the already paired songs as the opponent
         random_opponent = random.choice(shuffled[:-1])
-        matchups.append((last_song, random_opponent))
+        paired.append((last_song, random_opponent))
+    
         
-    return matchups
+    return paired
 
 def generate_round_2_pairs(songs):
     ...
@@ -38,21 +47,19 @@ def generate_round_2_pairs(songs):
 def generate_round_3_pairs(songs):
     ...
 
-def matchups(pairs):
+def get_matchup_result(pair):
     print('CURRENT ROUND')
-    for pair in pairs:
-        print(f'Song [1]: {pair[0].title}')
-        print(f'Song [2]: {pair[1].title}')
-        choice = get_user_choice(2)
+    """Handles exactly one matchup and returns the outcome."""
+    print(f"\nSong [1]: {pair[0].title}")
+    print(f"Song [2]: {pair[1].title}")
 
-        if choice == 1:
-            winner, loser = pair[0], pair[1]
-            update_elo(winner, loser)
-        else:
-            winner, loser = pair[1], pair[0]
-            update_elo(winner, loser)
-            print(winner.rating)
-    
+    choice = get_user_choice(2)
+
+    if choice == 1:
+        return pair[0], pair[1]
+    else:
+        return pair[1], pair[0]
+
 
 # FOR MULTIPLE CHOICE
 def get_user_choice(num_options):
@@ -94,22 +101,7 @@ def get_ranking(session):
 
 
 def end_session(session):
+    #  mark complete, return final ranking
+    #  save playlist
+    session.is_active = False
     ...
-
-
-if __name__ == "__main__":
-    with open('mock_tracks.json', 'r') as f:
-        raw_data = json.load(f)
-        f.close()
-
-    song_pool = [
-        dt.Song (
-            id = item['id'],
-            title = item['name'],
-            artist = item['artists'][0]['name']
-        )
-        for item in raw_data['tracks']
-    ]
-        
-
-    test = create_session(user_id=12312312, songs=song_pool)
