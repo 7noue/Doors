@@ -4,11 +4,6 @@ import random
 
 K = 32
 
-
-# if song_list:
-#         paired = generate_round_1_pairs(song_list)
-#         paired = matchups(paired)
-
 def create_session(user_id: str , songs: List[dt.Song]) -> dt.Session:
     if not songs or len(songs) < 2:
         raise ValueError("⛽ Engine Error: You need at least 2 songs to start a matchup!")
@@ -19,7 +14,7 @@ def create_session(user_id: str , songs: List[dt.Song]) -> dt.Session:
     return dt.Session(
         user_id=user_id,
         songs=songs,
-        status=False
+        is_active=True
     )
 
 def generate_round_1_pairs(songs):
@@ -48,7 +43,6 @@ def generate_round_3_pairs(songs):
     ...
 
 def get_matchup_result(pair):
-    print('CURRENT ROUND')
     """Handles exactly one matchup and returns the outcome."""
     print(f"\nSong [1]: {pair[0].title}")
     print(f"Song [2]: {pair[1].title}")
