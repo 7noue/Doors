@@ -18,14 +18,18 @@ try:
     session = engine.create_session(user_id=123, songs=song_pool)
     print(f"✅ Engine started! Session ID: {session.id}")
     while session.is_active:
-        round = session.current_round
-        initialize_round = engine.generate_round_1_pairs(session.songs)
+        if session.current_round == 0:
+            engine.advance_round(session)
 
-        song_pairing = initialize_round
-        print(f"ROUND {round}")
-        for pair in song_pairing:
-            choice = engine.get_matchup_result(pair)
+        if session.current_matchup_index < len(session.matchups):
 
-        round += 1
+            m = session.matchups[session.current_matchup_index]
+
+            winner_obj, loser_obj = engine.get_matchup_result((m.song_a, m.song_b))
+
+            engine.submit_choice(session, winner_id=winner_obj.id)
+        else:
+            engine.advance_round(session)
+
 except ValueError as e:
     print(f"❌ {e}")

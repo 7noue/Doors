@@ -10,12 +10,21 @@ def create_session(user_id: str , songs: List[dt.Song]) -> dt.Session:
 
     if not user_id:
         raise ValueError("👤 Driver Error: No user_id provided.")
-    
+
+
     return dt.Session(
         user_id=user_id,
         songs=songs,
-        is_active=True
+        is_active=True,
     )
+
+
+def matchup_pairing(session, pair, round_number):
+    paired = [
+        dt.Matchup(song_a=pair[0], song_b=pair[1], round_number=round_number)
+        for p in pair
+    ]
+    return paired 
 
 def generate_round_1_pairs(songs):
     # 1. Shuffle
@@ -82,12 +91,49 @@ def update_elo(winner, loser):
     return winner, loser
 
 
-def submit_choice(session, matchup_id, winner_id):
-    ...
+def submit_choice(session, winner_id):
+    # 1. Get the current matchup using the 'Bookmark' index
+    if session.current_matchup_index >= len(session.matchups):
+        print("Round already finished!")
+        return
+
+    current_match = session.matchups[session.current_matchup_index]
+    
+    # 2. Assign the winner inside the Matchup object
+    current_match.winner_id = winner_id
+    
+    # 3. Handle ELO (Logic you've already written)
+    # Identify objects based on ID
+    if current_match.song_a.id == winner_id:
+        winner, loser = current_match.song_a, current_match.song_b
+    else:
+        winner, loser = current_match.song_b, current_match.song_a
+        
+    update_elo(winner, loser)
+
+    # 4. CRITICAL: Move the bookmark forward
+    session.current_matchup_index += 1
+    
+    # Check if we need to end the round or the game
+    if session.current_matchup_index == len(session.matchups):
+        print("All matchups in this round are done!")
 
 
 def advance_round(session):
-    ...
+    next_round = session.current_round + 1
+    if next_round > 3:
+        print("Session already finished!")
+        return 
+    rounds = [generate_round_1_pairs, generate_round_2_pairs, generate_round_3_pairs]
+    paired = rounds[next_round](songs=session.songs)
+    session.matchups.append(paired)
+
+
+# def get_next_available_match(session: Session) -> Optional[Matchup]:
+#     for matchup in session.matchups:
+#         if matchup.winner_id is None:
+#             return matchup
+#     return None # All matches in this round are done!
 
 
 def get_ranking(session):
