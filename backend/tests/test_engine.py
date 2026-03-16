@@ -1,5 +1,5 @@
-from backend.engine import get_ranking, end_session
-import base_mock
+from app import get_ranking, end_session
+
 
 def test_get_ranking_order(mock_session, capsys):
     """

@@ -1,4 +1,4 @@
-import data_structure as dt
+import app.models as dt
 from typing import List
 import random
 

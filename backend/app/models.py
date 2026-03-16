@@ -38,5 +38,5 @@ class Session(BaseModel):
     is_active: bool = True
     created_at: datetime = Field(default_factory=datetime.now)
     matchups: List[Matchup] = Field(default_factory=list)
-    current_matchup_index = int = 0
+    current_matchup_index: int = 0
 
