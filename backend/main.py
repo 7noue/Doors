@@ -16,24 +16,33 @@ def create_game(user_id: str):
         session = manager.manage_session(user_id)
         return session
     except ValueError as e:
-        return HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e))
 
 
 @app.get("/sessions/{session_id}/matchup")
 def get_current_matchup(session_id: str):
     try:
-        session_id = load_session(f"{session_id}-session_state.json")
-        return "Successful"
+
+        winner_id = winner_obj_.id
+        return winner_id
     except ValueError as e:
-        return HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e))
 
 
 @app.post("/sessions/{session_id}/choose")
 def submit_vote(session_id: str, winner_id: str):
-    ...
+    try:
+        engine.submit_choice(session_id, winner_id=winner_obj.id)
+        save_session(session=session)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 
-@app.get('/sessions/{session.id}/ranking')
-def get_ranking():
-    ...
-
+@app.get('/sessions/{session_id}/ranking')
+def get_ranking(session_id: str):
+    try:
+    # print("🏆 Tournament Complete!")
+        ranking = engine.get_ranking(session_id)
+        return ranking 
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))

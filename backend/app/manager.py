@@ -21,13 +21,11 @@ def manage_session(user_id: str):
         else: 
             song_pool = fetch_user_data(user_id)
             session = create_session(user_id=user_id, songs=song_pool)
-            user_dir.mkdir()
-            if user_dir.exists():
-                file_path = f"stored_sessions/{user_id}/{session.id}.json"
-                session = save_session(session=session, filepath=file_path)
-                print("Session created!")
-                advance_round(session)
-                return session
+            file_path = f"stored_sessions/{user_id}/{session.id}.json"
+            session = save_session(session=session, filepath=file_path)
+            print("Session created!")
+            advance_round(session)
+            return session
     except ValueError as e:
         print(f"❌ {e}")
 
