@@ -19,12 +19,13 @@ def create_game(user_id: str):
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@app.get("/sessions/{session_id}/matchup")
-def get_current_matchup(session_id: str):
+@app.get("/sessions/{user_id}/{session_id}/matchup")
+def get_current_matchup(user_id: str, session_id: str):
     try:
-
-        winner_id = winner_obj_.id
-        return winner_id
+        session = manager.locate_session(user_id=user_id, session_id=session_id)
+        print("HEHEHEHEH")
+        # winner_id = winner_obj_.id
+        # return winner_id
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -32,8 +33,8 @@ def get_current_matchup(session_id: str):
 @app.post("/sessions/{session_id}/choose")
 def submit_vote(session_id: str, winner_id: str):
     try:
-        engine.submit_choice(session_id, winner_id=winner_obj.id)
-        save_session(session=session)
+        engine.submit_choice(session_id, winner_id=winner_id)
+        save_session(session=session_id)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 

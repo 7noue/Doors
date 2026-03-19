@@ -9,15 +9,10 @@ from .models import Song, Session
 
 def manage_session(user_id: str):
     try:
-        user_dir = Path(f'stored_sessions/{user_id}')
-        
-
-        if user_dir.exists():
-            for file in user_dir.glob('*.json'):
-                session = load_session(filepath=file)
-                if session.is_active:
-                    print("Session restored!")
-                    return session
+        restored_session = locate_session(user_id=user_id)
+        if restored_session:
+            print("Session restored!")
+            return restored_session
         else: 
             song_pool = fetch_user_data(user_id)
             session = create_session(user_id=user_id, songs=song_pool)
@@ -52,18 +47,35 @@ def fetch_user_data(user_id: str):
     return song_pool
 
 
-# while session.is_active:
-#     if session.current_matchup_index >= len(session.matchups):
-#         engine.advance_round(session)
-#         print(f'Current Round: {session.current_round}')
-#         if not session.is_active: break
+# def get_current_matchup(session=Session):
+#     while session.is_active:
+#         if session.current_matchup_index >= len(session.matchups):
+#             engine.advance_round(session)
+#             print(f'Current Round: {session.current_round}')
+#             if not session.is_active: break
 
-#     m = session.matchups[session.current_matchup_index]
-#     winner_obj, _ = engine.get_matchup_result((m.song_a, m.song_b))
+#         m = session.matchups[session.current_matchup_index]
+#         winner_obj, _ = engine.get_matchup_result((m.song_a, m.song_b))
 
-#     #Submit choice and Save
-#     engine.submit_choice(session, winner_id=winner_obj.id)
-#     save_session(session=session)
+#         return winner_obj, _
 
-# print("🏆 Tournament Complete!")
-# engine.get_ranking(session)
+
+
+def locate_session(user_id: str, session_id: str = None) -> Session | None:
+    user_dir = Path(f'stored_sessions/{user_id}')
+
+    if user_dir.exists():
+        if session_id:
+            file = Path(f'stored_sessions/{user_id}/{session_id}.json')
+            current_session = load_session(filepath=file)
+            if current_session and current_session.is_active:
+                return current_session
+            else:
+                return None
+        else:
+            for file in user_dir.glob('*.json'):
+                session = load_session(filepath=file)
+                if session.is_active:
+                    return session
+    else:
+        return None
