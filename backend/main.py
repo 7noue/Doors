@@ -37,13 +37,17 @@ def submit_vote(user_id: str, session_id: str, winner_id: str):
         song_a = current_match.song_a
         song_b = current_match.song_b
         
-        # 3. Determine the loser based on who the winner ISN'T
-        loser_id = song_b.id if winner_id == song_a.id else song_a.id
+        if current_match.winner_id:
+            raise ValueError('dsdas')
+        
+        if not winner_id == song_a.id and not winner_id == song_b.id:
+            raise ValueError('dsadsa')
 
         file_path = f"stored_sessions/{user_id}/{session.id}.json"
         record_match = engine.submit_choice(session=session, winner_id=winner_id)
         save_session(session=record_match, filepath=file_path)
         return record_match
+        
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -52,7 +56,6 @@ def submit_vote(user_id: str, session_id: str, winner_id: str):
 def get_ranking(user_id: str, session_id: str):
     try:
         session = manager.locate_session(user_id=user_id, session_id=session_id)
-    # print("🏆 Tournament Complete!")
         ranking = engine.get_ranking(session.id)
         return ranking 
     except ValueError as e:
