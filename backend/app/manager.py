@@ -49,8 +49,8 @@ def fetch_user_data(user_id: str):
 
 def get_current_matchup(session: Session):
     if session.current_matchup_index >= len(session.matchups):
-        advance_round(session)
-        print(f'Current Round: {session.current_round}')
+        session = advance_round(session)
+        return session
 
     m = session.matchups[session.current_matchup_index]
     return m

@@ -23,6 +23,8 @@ def create_game(user_id: str):
 def get_current_matchup(user_id: str, session_id: str):
     try:
         session = manager.locate_session(user_id=user_id, session_id=session_id)
+        if not session.is_active:
+            raise ValueError('Session completed!')
         match = manager.get_current_matchup(session=session)
         return match
     except ValueError as e:
@@ -37,6 +39,9 @@ def submit_vote(user_id: str, session_id: str, winner_id: str):
         song_a = current_match.song_a
         song_b = current_match.song_b
         
+        if not session.is_active:
+            raise ValueError('Session completed!')
+
         if current_match.winner_id:
             raise ValueError('Current match already have winner')
         
@@ -56,8 +61,10 @@ def submit_vote(user_id: str, session_id: str, winner_id: str):
 def get_ranking(user_id: str, session_id: str):
     try:
         session = manager.locate_session(user_id=user_id, session_id=session_id)
-        if not session.is_active:
-            ranking = engine.get_ranking(session.id)
-            return ranking 
+        if session.is_active:
+            raise ValueError('Session in progressed.')
+
+        ranking = engine.get_ranking(session.id)
+        return ranking 
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))

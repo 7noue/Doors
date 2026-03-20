@@ -176,7 +176,7 @@ def advance_round(session):
 
     MAX_ROUNDS = 3
     if session.current_round > MAX_ROUNDS:
-        session.is_active = False
+        session.is_active = False        
         return session
     
     rounds = [generate_round_1_pairs, generate_round_2_pairs, generate_round_3_pairs]
