@@ -47,21 +47,17 @@ def fetch_user_data(user_id: str):
     return song_pool
 
 
-# def get_current_matchup(session=Session):
-#     while session.is_active:
-#         if session.current_matchup_index >= len(session.matchups):
-#             engine.advance_round(session)
-#             print(f'Current Round: {session.current_round}')
-#             if not session.is_active: break
+def get_current_matchup(session: Session):
+    if session.current_matchup_index >= len(session.matchups):
+        advance_round(session)
+        print(f'Current Round: {session.current_round}')
 
-#         m = session.matchups[session.current_matchup_index]
-#         winner_obj, _ = engine.get_matchup_result((m.song_a, m.song_b))
-
-#         return winner_obj, _
+    m = session.matchups[session.current_matchup_index]
+    return m
 
 
 
-def locate_session(user_id: str, session_id: str = None) -> Session | None:
+def locate_session(user_id: str, session_id: str = None) -> Session | None :
     user_dir = Path(f'stored_sessions/{user_id}')
 
     if user_dir.exists():

@@ -167,6 +167,7 @@ def submit_choice(session: dt.Session, winner_id: str):
             session.songs[i] = song.model_copy(update=updates["loser_update"])
 
     session.current_matchup_index += 1
+    return session
 
 
 def advance_round(session):
@@ -191,7 +192,6 @@ def advance_round(session):
 def get_ranking(session):
     songs = session.songs
     sorted_songs = sorted(songs, key=lambda s: s.rating, reverse=True)
-    display_songs(sorted_songs)
 
     return sorted_songs
     

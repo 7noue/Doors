@@ -23,27 +23,37 @@ def create_game(user_id: str):
 def get_current_matchup(user_id: str, session_id: str):
     try:
         session = manager.locate_session(user_id=user_id, session_id=session_id)
-        print("HEHEHEHEH")
-        # winner_id = winner_obj_.id
-        # return winner_id
+        match = manager.get_current_matchup(session=session)
+        return match
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@app.post("/sessions/{session_id}/choose")
-def submit_vote(session_id: str, winner_id: str):
+@app.post("/sessions/{user_id}/{session_id}/choose")
+def submit_vote(user_id: str, session_id: str, winner_id: str):
     try:
-        engine.submit_choice(session_id, winner_id=winner_id)
-        save_session(session=session_id)
+        session = manager.locate_session(user_id, session_id)
+        current_match = manager.get_current_matchup(session=session)
+        song_a = current_match.song_a
+        song_b = current_match.song_b
+        
+        # 3. Determine the loser based on who the winner ISN'T
+        loser_id = song_b.id if winner_id == song_a.id else song_a.id
+
+        file_path = f"stored_sessions/{user_id}/{session.id}.json"
+        record_match = engine.submit_choice(session=session, winner_id=winner_id)
+        save_session(session=record_match, filepath=file_path)
+        return record_match
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@app.get('/sessions/{session_id}/ranking')
-def get_ranking(session_id: str):
+@app.get('/sessions/{user_id}/{session_id}/ranking')
+def get_ranking(user_id: str, session_id: str):
     try:
+        session = manager.locate_session(user_id=user_id, session_id=session_id)
     # print("🏆 Tournament Complete!")
-        ranking = engine.get_ranking(session_id)
+        ranking = engine.get_ranking(session.id)
         return ranking 
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
