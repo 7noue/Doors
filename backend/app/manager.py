@@ -17,9 +17,9 @@ def manage_session(user_id: str):
             song_pool = fetch_user_data(user_id)
             session = create_session(user_id=user_id, songs=song_pool)
             file_path = f"stored_sessions/{user_id}/{session.id}.json"
+            advance_round(session)
             session = save_session(session=session, filepath=file_path)
             print("Session created!")
-            advance_round(session)
             return session
     except ValueError as e:
         print(f"❌ {e}")
@@ -48,13 +48,17 @@ def fetch_user_data(user_id: str):
 
 
 def get_current_matchup(session: Session):
-    if session.current_matchup_index >= len(session.matchups):
-        session = advance_round(session)
-        return session
-
     m = session.matchups[session.current_matchup_index]
     return m
 
+def get_matchup_status(session: Session) -> Session:
+    file_path = f"stored_sessions/{session.user_id}/{session.id}.json"
+    if session.current_matchup_index >= len(session.matchups):
+        session = advance_round(session)
+        print(f"Round advanced to {session.current_round} and SAVED.")
+
+    save_session(session=session, filepath=file_path)
+    return session
 
 
 def locate_session(user_id: str, session_id: str = None) -> Session | None :

@@ -23,10 +23,8 @@ def create_game(user_id: str):
 def get_current_matchup(user_id: str, session_id: str):
     try:
         session = manager.locate_session(user_id=user_id, session_id=session_id)
-        if not session.is_active:
-            raise ValueError('Session completed!')
-        match = manager.get_current_matchup(session=session)
-        return match
+        pair = manager.get_current_matchup(session=session)
+        return pair
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -35,23 +33,22 @@ def get_current_matchup(user_id: str, session_id: str):
 def submit_vote(user_id: str, session_id: str, winner_id: str):
     try:
         session = manager.locate_session(user_id, session_id)
+        if not session.is_active:
+             ValueError('Session completed!')
+             
         current_match = manager.get_current_matchup(session=session)
         song_a = current_match.song_a
         song_b = current_match.song_b
         
-        if not session.is_active:
-            raise ValueError('Session completed!')
-
         if current_match.winner_id:
             raise ValueError('Current match already have winner')
         
-        if not winner_id == song_a.id and not winner_id == song_b.id:
+        if winner_id != song_a.id and winner_id != song_b.id:
             raise ValueError('Incorrect Winner ID')
 
-        file_path = f"stored_sessions/{user_id}/{session.id}.json"
-        record_match = engine.submit_choice(session=session, winner_id=winner_id)
-        save_session(session=record_match, filepath=file_path)
-        return record_match
+        session = engine.submit_choice(session=session, winner_id=winner_id)
+        session = manager.get_matchup_status(session=session)
+        return session
         
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -62,7 +59,7 @@ def get_ranking(user_id: str, session_id: str):
     try:
         session = manager.locate_session(user_id=user_id, session_id=session_id)
         if session.is_active:
-            raise ValueError('Session in progressed.')
+            raise ValueError('Session in progress.')
 
         ranking = engine.get_ranking(session.id)
         return ranking 
