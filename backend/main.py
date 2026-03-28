@@ -5,10 +5,20 @@ from fastapi import FastAPI, HTTPException
 from app import engine, manager
 from app.services import load_session, save_session
 from app import models as dt
+from fastapi.middleware.cors import CORSMiddleware
+
 
 
 
 app = FastAPI(title="Dizzy API")
+# Tell FastAPI who is allowed to talk to it
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"], # Your SvelteKit dev server URL
+    allow_credentials=True,
+    allow_methods=["*"], # Allows all methods (GET, POST, etc.)
+    allow_headers=["*"], # Allows all headers
+)
 
 @app.post("/sessions/create", response_model=dt.Session)
 def create_game(user_id: str):
