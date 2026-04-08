@@ -15,14 +15,14 @@
     }
 </script>
 
-<div class="max-w-md mx-auto mt-10 p-8 bg-white rounded-2xl border border-gray-800 shadow-2xl">
-    <h3 class="text-2xl font-black text-red-400 mb-6 tracking-tight">
+<div class="max-w-md mx-auto mt-10 p-8 bg-white border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] rounded-xl">
+    <h3 class="text-3xl font-black text-black mb-6 tracking-tight uppercase">
         Start a new game
     </h3>
 
-    <form on:submit|preventDefault={handleSubmit} class="flex flex-col space-y-4">
+    <form on:submit|preventDefault={handleSubmit} class="flex flex-col space-y-5">
         <div>
-            <label for="username" class="block text-xs font-bold text-gray-400 uppercase mb-1 ml-1">
+            <label for="username" class="block text-sm font-black text-black uppercase mb-2">
                 Player Username
             </label>
             <input
@@ -30,24 +30,21 @@
                 bind:value={userId}
                 type="text"
                 placeholder="e.g dizzy_dev"
-                class="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-700
-                focus:ring-1.3 focus:ring-emerald-500 focus:border-transparent outline-none
-                transition-all duration-200 placeholder:text-gray-600
-                "
+                class="w-full px-4 py-3 rounded-lg bg-white text-black border-2 border-black 
+                focus:bg-yellow-50 outline-none transition-all placeholder:text-gray-400 font-bold"
             />
         </div>
         
         <button 
             type="submit"
-            class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 active:scale-95
-            text-white font-bold rounded-lg shadow-lg shadow-emerald-900/20 transition-all duration-150
-            ">
+            class="w-full py-4 bg-[#bef264] hover:bg-[#a3e635] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none
+            text-black font-black uppercase rounded-lg border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all">
             Create Session
         </button>
     </form>
 
     {#if status}
-        <div class="fixed bottom-5 right-5 p-4 rounded-lg shadow-2xl bg-emerald-500 text-white font-bold animate-bounce">
+        <div class="fixed bottom-5 right-5 p-4 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-[#bef264] text-black font-black uppercase">
             {status}
         </div>
     {/if}

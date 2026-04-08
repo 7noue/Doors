@@ -4,17 +4,19 @@
 </script>
 
 
-<main class="min-h-screen bg-white p-10">
+<main class="py-10 px-6">
     <div class="max-w-4xl mx-auto">
+        
         <header class="mb-12 text-center">
-            <h1 class="text-5xl font-extrabold">
+            <h1 class="text-6xl font-black text-black tracking-tighter italic uppercase">
                 DIZZY SESSIONS
             </h1>
         </header>
-        <section>
 
+        <section>
             <CreateSession />
         </section>
+
     </div>
 </main>
 
