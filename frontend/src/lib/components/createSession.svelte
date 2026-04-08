@@ -7,7 +7,7 @@
     async function handleSubmit() {
         try {
             const data = await createSession(userId)
-            status = "Sesion created";
+            status = "Session created";
             console.log(data);
         } catch (e: any) {
             status = e.message;
