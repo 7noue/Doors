@@ -7,9 +7,9 @@
 <main class="py-10 px-6">
     <div class="max-w-4xl mx-auto">
         
-        <header class="mb-12 text-center">
+        <header class="mb-12">
             <h1 class="text-6xl font-black text-black tracking-tighter italic uppercase">
-                DIZZY SESSIONS
+                DIZZY
             </h1>
         </header>
 
