@@ -1,5 +1,11 @@
 import {API_BASE} from '$lib/constants';
 
+/**
+ *  THE HANDSHAKE BETWEEN MY BACKEND main.py
+ *  
+ *  
+ */
+
 export async function createSession(userId: String) {
     const response = await fetch(`${API_BASE}/sessions/create?user_id=${userId}`, {
         method: "POST"

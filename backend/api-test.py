@@ -1,3 +1,7 @@
+"""
+FOR TEMPORARY API TESTING
+"""
+
 import requests as req
 
 BASE_URL = 'http://127.0.0.1:8000/'

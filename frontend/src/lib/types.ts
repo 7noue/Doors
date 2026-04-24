@@ -1,3 +1,6 @@
+// FOR FRONTEND TO HAVE IDEA ON WHAT OUR MODELS LOOKLIKE and Lessen type mistake
+// You will export is as import type { Song, Session }
+
 export interface Song {
     id: string;
     title: string;

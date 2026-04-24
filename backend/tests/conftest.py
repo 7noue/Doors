@@ -3,6 +3,11 @@ from app import Song, Session
 from pathlib import Path
 import json
 
+
+"""
+    Confest: Its like export function, present for all test_*.py files
+"""
+
 @pytest.fixture
 def mock_session():
     songs = [

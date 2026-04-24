@@ -20,6 +20,7 @@ app.add_middleware(
     allow_headers=["*"], # Allows all headers
 )
 
+
 @app.post("/sessions/create", response_model=dt.Session)
 def create_game(user_id: str):
     try:
