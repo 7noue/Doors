@@ -1,8 +1,8 @@
 <script lang="ts">
     import { page } from '$app/stores';
     import { onMount } from 'svelte';
-    import { getSession } from '$lib/api';
     import type { Session } from '$lib/types'; // Import the type
+    import { getSession } from '$lib/api';
     import Matchup from "$lib/components/Matchup.svelte";
     import SongRanking from "$lib/components/SongRanking.svelte";
 
@@ -16,7 +16,7 @@
         if (sessionId) {
             try {
                 // Cast the response to our Session type
-                session = await getSession(sessionId) as Session;
+                session = await getSession(session?.user_id as string, sessionId as string) as Session;
             } catch (err) {
                 console.error(err);
             } finally {

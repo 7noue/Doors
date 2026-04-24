@@ -18,7 +18,7 @@
         loading = true;
         try {
             // We call the API and overwrite the session with the updated data from Python
-            const updatedSession = await submitChoice(session.id, winnerId);
+            const updatedSession = await submitChoice(session.user_id, session.id, winnerId);
             session = updatedSession;
         } catch (error) {
             console.error("Voting error:", error);

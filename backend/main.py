@@ -83,3 +83,15 @@ def get_ranking(user_id: str, session_id: str):
         return ranking 
     except ValueError as e:
         raise HTTPException(status_code=400, detail="Session not found")
+
+
+@app.get("/sessions/{user_id}/{session_id}", response_model=dt.Session)
+def get_full_session(user_id: str, session_id: str):
+    try:
+        # Use your manager to load the existing file
+        session = manager.get_active_session(user_id=user_id, session_id=session_id)
+        if not session:
+            raise HTTPException(status_code=404, detail="Session not found")
+        return session
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))

@@ -21,33 +21,26 @@ export async function getRankings(sessionId:string) {
         throw new Error ("Could not fetch rankings");
     }
 }
-
-export async function submitChoice(sessionId: string, winnerId: string) {
-    // We assume your Python backend is running at this base URL
-    // (e.g., http://localhost:8000)
-    const response = await fetch(`/api/sessions/${sessionId}/vote`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            winner_id: winnerId
-        })
+export async function submitChoice(userId: string, sessionId: string, winnerId: string) {
+    // Matches: @app.post("/sessions/{user_id}/{session_id}/choose")
+    // Note: winner_id is a query parameter in your FastAPI code
+    const response = await fetch(`${API_BASE}/sessions/${userId}/${sessionId}/choose?winner_id=${winnerId}`, {
+        method: 'POST'
     });
-
-    if (!response.ok) {
-        // If the backend returns a 400 or 500 error
-        const errorData = await response.json();
-        throw new Error(errorData.detail || "Failed to submit choice");
-    }
-
-    // This will be the dt.Session object returned by your Python advance_round/submit_choice
+    if (!response.ok) throw new Error("Vote failed");
     return await response.json();
 }
 
+export async function getInitialMatchup(userId: string, sessionId: string) {
+    // Matches: @app.get("/sessions/{user_id}/{session_id}/matchup")
+    const response = await fetch(`${API_BASE}/sessions/${userId}/${sessionId}/matchup`);
+    if (!response.ok) throw new Error("Matchup not found");
+    return await response.json();
+}
 
-export async function getSession(id: string) {
-    const response = await fetch(`/api/session/${id}`);
-    if (!response.ok) throw new Error("Could not find session");
+export async function getSession(userId: string, sessionId: string) {
+    const response = await fetch(`${API_BASE}/sessions/${userId}/${sessionId}`);
+    
+    if (!response.ok) throw new Error("Session not found");
     return await response.json();
 }
