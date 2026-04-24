@@ -13,10 +13,16 @@ class Song(BaseModel):
     id: str
     title: str 
     artist: str 
+    
+    # Metadata Fields
     spotify_id: Optional[str] = None
+    apple_music_id: Optional[str] = None
+    artwork_url: Optional[str] = None
+    preview_url: Optional[str] = None  # 5-30 second clip
     genre: Optional[str] = None
     year: Optional[int] = None
-
+    album_name: Optional[str] = None
+    
     rating: int = Field(default=1000, ge=0) #'ge=0' ensures rating is Greater or Equal to 0
     wins: int = 0
     losses: int = 0
